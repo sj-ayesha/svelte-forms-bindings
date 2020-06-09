@@ -1,0 +1,101 @@
+<script>
+  import CustomInput from "./CustomInput.svelte";
+  import Toggle from "./Toggle.svelte";
+  import { isValidEmail } from './validation.js';
+  let val = "Ayesha";
+  let selectedOption = 1;
+  let price = 0;
+  let agreed;
+  let favColor = "red";
+  let favFood = ['pizza'];
+  let singleFavColor = 'red';
+  let usernameInput;
+  let customInput;
+  let enteredEmail = '';
+  let formIsValid = false;
+
+  $: if (isValidEmail(enteredEmail)) {
+    formIsValid = true;
+  }
+  else {
+    formIsValid = false;
+  }
+
+  $: console.log(val);
+  $: console.log(selectedOption);
+  $: console.log(price);
+  $: console.log(agreed);
+  $: console.log(favColor);
+  $: console.log(favFood);
+  $: console.log(singleFavColor);
+  $: console.log(customInput);
+
+  function setValue(event) {
+	  val = event.target.value;
+  }
+
+  function saveData() {
+    // console.log(document.querySelector('#username').value);
+    console.log(usernameInput.value);
+  }
+</script>
+
+<style>
+  .invalid {
+    border: 1px solid red;
+  }
+</style>
+
+<main>
+  <!-- <input type="text" value={val} on:input={setValue} /> -->
+  <!-- <input type="text" bind:value={val} />  -->
+  <!--Two way binding refresher-->
+  <CustomInput bind:val={val} bind:this={customInput} />
+  <!--Custom components bindings-->
+  <Toggle bind:chosenOption={selectedOption} />
+  <!--Automatic Number Conversion-->
+  <input type="number" bind:value={price}>
+
+  <!--Checkboxes & Radio Buttons-->
+  <label>
+    <input type="checkbox" bind:checked={agreed}>Agree to terms
+  </label>
+
+  <h1>Favorite Color?</h1>
+  <label>
+    <input type="radio" name="colors" value="green" bind:group={favColor}> Green
+  </label>
+  <label>
+    <input type="radio" name="colors" value="red" bind:group={favColor}> Red
+  </label>
+  <label>
+    <input type="radio" name="colors" value="blue" bind:group={favColor}> Blue
+  </label>
+
+  <h1>Favorite Food?</h1>
+  <label>
+    <input type="checkbox" name="foods" value="pizza" bind:group={favFood}> Pizza
+  </label>
+  <label>
+    <input type="checkbox" name="foods" value="burger" bind:group={favFood}> Burger
+  </label>
+  <label>
+    <input type="checkbox" name="foods" value="pasta" bind:group={favFood}> Pasta
+  </label>
+
+  <!--Select Dropdowns-->
+  <select bind:value={singleFavColor}>
+    <option value="green">Green</option>
+    <option value="red">Red</option>
+    <option value="blue">Blue</option>
+  </select>
+  <!--Binding to Element References bind:this-->
+  <input type="text" bind:this={usernameInput}>
+  <button on:click="{saveData}">Save</button>
+
+  <!--Forms Validation & Inputs-->
+  <form on:submit|preventDefault>
+    <input type="email" bind:value={enteredEmail} class={isValidEmail(enteredEmail) ? '' : 'invalid'}>
+    <button type="submit" disabled={!formIsValid}>Save</button>
+  </form>
+</main>
